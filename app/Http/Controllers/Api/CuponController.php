@@ -11,56 +11,58 @@ use Illuminate\Support\Facades\DB;
 
 class CuponController extends Controller
 {
+    // Listar todos los cupones
     public function index()
     {
         $cupones = Cupon::with('campania')->get();
         return response()->json($cupones);
     }
 
-    //    public function indexAll()
-    // {
-    //     $cupones = \DB::table('cupones')
-    //         ->select(
-    //             'id',
-    //             'codigo',
-    //             'campania_id as comercio_id',
-    //             'created_at',
-    //             'updated_at',
-    //             \DB::raw("CONCAT('https://jacaranda.com.ar/#/cupones/codigo/', codigo) as infoQr")
-    //         )
-    //         ->get();
+//    public function indexAll()
+// {
+//     $cupones = \DB::table('cupones')
+//         ->select(
+//             'id',
+//             'codigo',
+//             'campania_id as comercio_id',
+//             'created_at',
+//             'updated_at',
+//             \DB::raw("CONCAT('https://jacaranda.com.ar/#/cupones/codigo/', codigo) as infoQr")
+//         )
+//         ->get();
 
-    //     return response()->json($cupones);
-    // }
+//     return response()->json($cupones);
+// }
 
-    public function indexAll()
-    {
-        $cupones = Cupon::with(['asignaciones.user'])
-            ->get()
-            ->map(function ($cupon) {
-                return [
-                    'id' => $cupon->id,
-                    'codigo' => $cupon->codigo,
-                    'comercio_id' => $cupon->campania_id,
-                    'created_at' => $cupon->created_at,
-                    'updated_at' => $cupon->updated_at,
-                    'infoQr' => 'https://jacaranda.com.ar/#/cupones/codigo/' . $cupon->codigo,
-                    'usuarios_reclamaron' => $cupon->asignaciones->map(function ($asignacion) {
-                        return [
-                            'id' => $asignacion->user->id,
-                            'name' => $asignacion->user->name,
-                            'email' => $asignacion->user->email,
-                            'fecha_canje' => $asignacion->fecha_canje,
-                        ];
-                    }),
-                ];
-            });
+public function indexAll()
+{
+    $cupones = Cupon::with(['asignaciones.user']) // Traemos asignaciones y sus usuarios
+        ->get()
+        ->map(function ($cupon) {
+            return [
+                'id' => $cupon->id,
+                'codigo' => $cupon->codigo,
+                'comercio_id' => $cupon->campania_id,
+                'created_at' => $cupon->created_at,
+                'updated_at' => $cupon->updated_at,
+                'infoQr' => 'https://jacaranda.com.ar/#/cupones/codigo/' . $cupon->codigo,
+                'usuarios_reclamaron' => $cupon->asignaciones->map(function ($asignacion) {
+                    return [
+                        'id' => $asignacion->user->id,
+                        'name' => $asignacion->user->name,
+                        'email' => $asignacion->user->email,
+                        'fecha_canje' => $asignacion->fecha_canje,
+                    ];
+                }),
+            ];
+        });
 
-        return response()->json($cupones);
-    }
+    return response()->json($cupones);
+}
 
 
 
+    // Mostrar un cupón por id
     public function show($id)
     {
         try {
@@ -69,6 +71,7 @@ class CuponController extends Controller
                 return response()->json(['message' => 'Cupón no encontrado'], 404);
             }
             return response()->json($cupon);
+
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Error al obtener cupón',
@@ -77,6 +80,7 @@ class CuponController extends Controller
         }
     }
 
+    // Crear un cupón manual (opcional, normalmente se crean con campañas)
     public function store(Request $request)
     {
         try {
@@ -91,8 +95,10 @@ class CuponController extends Controller
             ]);
 
             return response()->json($cupon, 201);
+
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
+
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Error al crear cupón',
@@ -101,6 +107,7 @@ class CuponController extends Controller
         }
     }
 
+    // Actualizar un cupón
     public function update(Request $request, $id)
     {
         try {
@@ -117,8 +124,10 @@ class CuponController extends Controller
             $cupon->update($request->all());
 
             return response()->json($cupon);
+
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
+
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Error al actualizar cupón',
@@ -127,6 +136,7 @@ class CuponController extends Controller
         }
     }
 
+    // Eliminar un cupón
     public function destroy($id)
     {
         try {
@@ -138,6 +148,7 @@ class CuponController extends Controller
             $cupon->delete();
 
             return response()->json(['message' => 'Cupón eliminado correctamente']);
+
         } catch (Exception $e) {
             return response()->json([
                 'message' => 'Error al eliminar cupón',
@@ -146,43 +157,49 @@ class CuponController extends Controller
         }
     }
 
-    public function getByCampania($campania_id)
-    {
-        try {
-            $cupones = Cupon::with('campania')
-                ->where('campania_id', $campania_id)
-                ->get();
+    // Obtener cupones por campaña
+public function getByCampania($campania_id)
+{
+    try {
+        $cupones = Cupon::with('campania')
+            ->where('campania_id', $campania_id)
+            ->get();
 
-            if ($cupones->isEmpty()) {
-                return response()->json(['message' => 'No hay cupones para esta campaña'], 404);
-            }
-
-            return response()->json($cupones);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Error al obtener cupones por campaña',
-                'error' => $e->getMessage(),
-            ], 500);
+        if ($cupones->isEmpty()) {
+            return response()->json(['message' => 'No hay cupones para esta campaña'], 404);
         }
+
+        return response()->json($cupones);
+
+    } catch (Exception $e) {
+        return response()->json([
+            'message' => 'Error al obtener cupones por campaña',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
 
-    public function getByCodigo($codigo)
-    {
-        try {
-            $cupon = Cupon::with([
-                'campania.almacenes'   // campaña y sus almacenes
-            ])->where('codigo', strtoupper($codigo))->first();
+// Buscar cupón por código y traer campaña + almacenes
+public function getByCodigo($codigo)
+{
+    try {
+        $cupon = Cupon::with([
+            'campania.almacenes'   // campaña y sus almacenes
+        ])->where('codigo', strtoupper($codigo))->first();
 
-            if (!$cupon) {
-                return response()->json(['message' => 'Cupón no encontrado'], 404);
-            }
-
-            return response()->json($cupon);
-        } catch (Exception $e) {
-            return response()->json([
-                'message' => 'Error al obtener cupón',
-                'error' => $e->getMessage(),
-            ], 500);
+        if (!$cupon) {
+            return response()->json(['message' => 'Cupón no encontrado'], 404);
         }
+
+        return response()->json($cupon);
+
+    } catch (Exception $e) {
+        return response()->json([
+            'message' => 'Error al obtener cupón',
+            'error' => $e->getMessage(),
+        ], 500);
     }
+}
+
+
 }

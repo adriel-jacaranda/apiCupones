@@ -240,4 +240,38 @@ class AuthController extends Controller
             ], 500);
         }
     }
+
+    public function refreshToken(Request $request)
+{
+    try {
+        // Obtener el usuario autenticado
+        $user = $request->user();
+
+        if (!$user) {
+            return response()->json([
+                'message' => 'Usuario no autenticado',
+            ], 401);
+        }
+
+        // Eliminar el token actual para evitar duplicados
+        $request->user()->currentAccessToken()->delete();
+
+        // Crear un nuevo token (validez según config/sanctum.php => 30 días)
+        $newToken = $user->createToken('auth_token')->plainTextToken;
+
+        return response()->json([
+            'access_token' => $newToken,
+            'token_type' => 'Bearer',
+            'user' => $user,
+            'message' => 'Token renovado correctamente',
+        ], 200);
+
+    } catch (Exception $e) {
+        return response()->json([
+            'message' => 'Error al refrescar el token',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 }

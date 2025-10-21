@@ -44,6 +44,7 @@ class CategoriaAlmacenController extends Controller
 
             $categoria = CategoriaAlmacen::create($data);
             return response()->json($categoria, 201);
+
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         } catch (Exception $e) {
@@ -88,6 +89,7 @@ class CategoriaAlmacenController extends Controller
             $data = $request->except('icono');
 
             if ($request->hasFile('icono')) {
+                // Borrar icono anterior si existe
                 if ($categoria->icono && \Storage::disk('public')->exists($categoria->icono)) {
                     \Storage::disk('public')->delete($categoria->icono);
                 }
@@ -97,6 +99,7 @@ class CategoriaAlmacenController extends Controller
 
             $categoria->update($data);
             return response()->json($categoria);
+
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         } catch (Exception $e) {
@@ -115,6 +118,7 @@ class CategoriaAlmacenController extends Controller
                 return response()->json(['message' => 'Categoría no encontrada'], 404);
             }
 
+            // Borrar icono si existe
             if ($categoria->icono && \Storage::disk('public')->exists($categoria->icono)) {
                 \Storage::disk('public')->delete($categoria->icono);
             }

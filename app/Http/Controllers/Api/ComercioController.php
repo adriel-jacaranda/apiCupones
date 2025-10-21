@@ -15,22 +15,22 @@ class ComercioController extends Controller
     {
         return response()->json(Comercio::all());
     }
-    public function indexW()
+   public function indexW()
     {
         return response()->json(Comercio::all());
     }
-    public function campaniasDeAlmacen($id)
-    {
-        $almacen = Comercio::with(['campanias.cupones', 'categoria'])
-            ->findOrFail($id);
-        return response()->json($almacen);
-    }
+public function campaniasDeAlmacen($id)
+{
+    $almacen = Comercio::with(['campanias.cupones', 'categoria'])
+                      ->findOrFail($id);
+    return response()->json($almacen);
+}
 
     public function porCategoria($categoriaId)
-    {
-        $almacenes = Comercio::where('categoria_almacen_id', $categoriaId)->get();
-        return response()->json($almacenes);
-    }
+{
+    $almacenes = Comercio::where('categoria_almacen_id', $categoriaId)->get();
+    return response()->json($almacenes);
+}
 
     public function show($id)
     {
@@ -52,11 +52,12 @@ class ComercioController extends Controller
                 'lng' => 'nullable|numeric|between:-180,180',
                 'categoria_almacen_id' => 'nullable|exists:categoria_almacen,id',
                 'activo' => 'nullable|boolean',
-                'logo' => 'nullable|image|max:2048',
+                'logo' => 'nullable|image|max:2048', // Max 2MB
             ]);
 
             $data = $request->except('logo');
 
+            // Subir logo si existe
             if ($request->hasFile('logo')) {
                 $path = $request->file('logo')->store('almacenes', 'public');
                 $data['logo'] = $path;
@@ -65,6 +66,7 @@ class ComercioController extends Controller
             $almacen = Comercio::create($data);
 
             return response()->json($almacen, 201);
+
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         } catch (Exception $e) {
@@ -88,12 +90,14 @@ class ComercioController extends Controller
                 'lng' => 'nullable|numeric|between:-180,180',
                 'categoria_almacen_id' => 'nullable|exists:categoria_almacen,id',
                 'activo' => 'nullable|boolean',
-                'logo' => 'nullable|image|max:2048',
+                'logo' => 'nullable|image|max:2048', // Max 2MB
             ]);
 
             $data = $request->except('logo');
 
+            // Subir logo si existe, y borrar logo anterior (opcional)
             if ($request->hasFile('logo')) {
+                // Borrar logo viejo si existe
                 if ($almacen->logo && Storage::disk('public')->exists($almacen->logo)) {
                     Storage::disk('public')->delete($almacen->logo);
                 }
@@ -104,6 +108,7 @@ class ComercioController extends Controller
             $almacen->update($data);
 
             return response()->json($almacen);
+
         } catch (ValidationException $e) {
             return response()->json(['errors' => $e->errors()], 422);
         } catch (Exception $e) {
@@ -119,6 +124,7 @@ class ComercioController extends Controller
         }
 
         try {
+            // Borrar logo si existe
             if ($almacen->logo && Storage::disk('public')->exists($almacen->logo)) {
                 Storage::disk('public')->delete($almacen->logo);
             }
