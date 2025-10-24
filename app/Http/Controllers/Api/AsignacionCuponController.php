@@ -119,6 +119,80 @@ public function store(Request $request)
     }
 }
 
+public function storeCouponSystem(Request $request)
+{
+    try {
+        // ✅ Validar datos, permitiendo que user_id quede vacío
+        $request->validate([
+            'cupon_id'    => 'required|exists:cupones,id',
+            'user_id'     => 'nullable|exists:users,id',
+            'userId'      => 'nullable|integer',
+            'comercio_id' => 'nullable|exists:comercios,id',
+            'fecha_canje' => 'nullable|date',
+        ]);
+
+        // ✅ Asegurar que venga al menos uno de los dos
+        if (empty($request->user_id) && empty($request->userId)) {
+            return response()->json([
+                'message' => 'Debe proporcionar al menos user_id o userId.'
+            ], 422);
+        }
+
+        // 🔍 Verificar duplicado por cupon + usuario (ambos tipos)
+        $exists = AsignacionCupon::where('cupon_id', $request->cupon_id)
+            ->where(function ($query) use ($request) {
+                if (!empty($request->user_id)) {
+                    $query->where('user_id', $request->user_id);
+                }
+                if (!empty($request->userId)) {
+                    $query->orWhere('userId', $request->userId);
+                }
+            })
+            ->exists();
+
+        if ($exists) {
+            return response()->json([
+                'message' => 'El usuario ya canjeó este cupón.'
+            ], 409);
+        }
+
+        // 🧾 Crear asignación (sin forzar user_id)
+        $data = [
+            'cupon_id'    => $request->cupon_id,
+            'fecha_canje' => $request->fecha_canje ?? now(),
+            'comercio_id' => $request->comercio_id,
+        ];
+
+        if (!empty($request->user_id)) {
+            $data['user_id'] = $request->user_id;
+        }
+
+        if (!empty($request->userId)) {
+            $data['userId'] = $request->userId;
+        }
+
+        $asignacion = AsignacionCupon::create($data);
+
+        return response()->json([
+            'message' => 'Cupón asignado correctamente.',
+            'data' => $asignacion
+        ], 201);
+
+    } catch (ValidationException $e) {
+        return response()->json([
+            'message' => 'Error de validación.',
+            'errors' => $e->errors()
+        ], 422);
+
+    } catch (Exception $e) {
+        return response()->json([
+            'message' => 'Error al crear asignación.',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
+
     /** ================================
      *  CREAR ASIGNACIÓN CON DNI + CÓDIGO
      *  ================================ */
@@ -128,12 +202,13 @@ public function store(Request $request)
             $request->validate([
                 'codigo'      => 'required|exists:cupones,codigo',
                 'dni'         => 'required|exists:users,dni',
-                'almacen_id'  => 'required|exists:almacenes,id',
+                'almacen_id'  => 'required|exists:comercios,id',
                 'fecha_canje' => 'nullable|date',
             ]);
 
             $cupon = Cupon::where('codigo', $request->codigo)->with('campania')->first();
-            $user = User::where('dni', $request->dni)->first();
+            $user = 
+            User::where('dni', $request->dni)->first();
 
             if (!$cupon || !$user) {
                 return response()->json(['message' => 'Cupón o usuario no encontrado.'], 404);

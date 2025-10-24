@@ -77,7 +77,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::prefix('asignaciones')->group(function () {
         Route::get('/', [AsignacionCuponController::class, 'index']);
-        // Route::post('/', [AsignacionCuponController::class, 'store']);
+        Route::post('/storeCouponSystem', [AsignacionCuponController::class, 'storeSystem']);
         Route::post('/cupon', [AsignacionCuponController::class, 'storeDni']);
         Route::get('/{id}', [AsignacionCuponController::class, 'show']);
         Route::delete('/{id}', [AsignacionCuponController::class, 'destroy']);
