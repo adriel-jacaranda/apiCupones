@@ -1,0 +1,745 @@
+name: 'Campañas ADM'
+description: ''
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/campaniasComer
+    metadata:
+      custom: []
+      groupName: 'Campañas ADM'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Listar todas las campañas (modo completo)
+
+        Retorna todas las campañas con sus cupones, sin filtrar por estado.
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: array<Campania>
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/campanias
+    metadata:
+      custom: []
+      groupName: 'Campañas ADM'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Listar todas las campañas
+
+        Retorna todas las campañas registradas con sus relaciones.
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          [
+            {
+              "id": 1,
+              "nombre": "Campaña Día de la Madre",
+              "descripcion": "Descuentos especiales por el día de la madre",
+              "descuento_porcentaje": 20,
+              "cantidad_maxima": 100,
+              "activo": true,
+              "tipo_cliente": { "id": 1, "nombre": "Cliente Premium" },
+              "almacenes": [],
+              "cupones": []
+            }
+          ]
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/campanias
+    metadata:
+      custom: []
+      groupName: 'Campañas ADM'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Crear una nueva campaña
+
+        Crea una campaña y genera automáticamente sus cupones asociados.
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      nombre:
+        custom: []
+        name: nombre
+        description: 'Nombre de la campaña.'
+        required: true
+        example: 'Campaña Día del Padre'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      descripcion:
+        custom: []
+        name: descripcion
+        description: 'Descripción de la campaña.'
+        required: false
+        example: 'Descuentos especiales en artículos de regalo'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      descuento_porcentaje:
+        custom: []
+        name: descuento_porcentaje
+        description: 'Porcentaje de descuento.'
+        required: false
+        example: 15
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      compra_minima:
+        custom: []
+        name: compra_minima
+        description: 'Monto mínimo de compra.'
+        required: false
+        example: 50.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      compra_maxima:
+        custom: []
+        name: compra_maxima
+        description: 'Monto máximo de compra.'
+        required: false
+        example: 500.0
+        type: number
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      fecha_caducidad:
+        custom: []
+        name: fecha_caducidad
+        description: 'Fecha de caducidad de los cupones.'
+        required: true
+        example: '2025-12-31'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      cantidad_maxima:
+        custom: []
+        name: cantidad_maxima
+        description: 'Cantidad total de cupones a generar.'
+        required: true
+        example: 100
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      id_tipo_cliente:
+        custom: []
+        name: id_tipo_cliente
+        description: 'ID del tipo de cliente.'
+        required: false
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      activo:
+        custom: []
+        name: activo
+        description: 'Indica si la campaña está activa.'
+        required: false
+        example: true
+        type: boolean
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      almacenes:
+        custom: []
+        name: almacenes
+        description: 'IDs de almacenes asociados.'
+        required: false
+        example:
+          - 1
+          - 2
+          - 3
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      banner:
+        custom: []
+        name: banner
+        description: 'Imagen de banner de la campaña.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      nombre: 'Campaña Día del Padre'
+      descripcion: 'Descuentos especiales en artículos de regalo'
+      descuento_porcentaje: 15
+      compra_minima: 50.0
+      compra_maxima: 500.0
+      fecha_caducidad: '2025-12-31'
+      cantidad_maxima: 100
+      id_tipo_cliente: 1
+      activo: true
+      almacenes:
+        - 1
+        - 2
+        - 3
+    fileParameters:
+      banner: null
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "id": 10,
+            "nombre": "Campaña Día del Padre",
+            "descripcion": "Descuentos especiales en artículos de regalo",
+            "banner": "storage/banner_campanias/padre.jpg",
+            "almacenes": []
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "errors": { "nombre": ["El campo nombre es obligatorio."] }
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/campanias/{id}'
+    metadata:
+      custom: []
+      groupName: 'Campañas ADM'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Mostrar una campaña
+
+        Obtiene los datos de una campaña específica.
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'ID de la campaña.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "nombre": "Campaña de Verano",
+            "descripcion": "Descuentos en productos seleccionados",
+            "tipo_cliente": { "id": 1, "nombre": "Cliente Regular" },
+            "cupones": []
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Campaña no encontrada"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/campanias/{id}'
+    metadata:
+      custom: []
+      groupName: 'Campañas ADM'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Actualizar una campaña
+
+        Modifica los datos de una campaña existente.
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: multipart/form-data
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'ID de la campaña.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      nombre:
+        custom: []
+        name: nombre
+        description: 'Nuevo nombre de la campaña.'
+        required: false
+        example: 'Campaña de Navidad'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      descripcion:
+        custom: []
+        name: descripcion
+        description: 'Descripción de la campaña.'
+        required: false
+        example: 'Ofertas navideñas'
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      fecha_caducidad:
+        custom: []
+        name: fecha_caducidad
+        description: 'Nueva fecha de caducidad.'
+        required: false
+        example: '2025-12-31'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      banner:
+        custom: []
+        name: banner
+        description: 'Nuevo banner de la campaña.'
+        required: false
+        example: null
+        type: file
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      nombre: 'Campaña de Navidad'
+      descripcion: 'Ofertas navideñas'
+      fecha_caducidad: '2025-12-31'
+    fileParameters:
+      banner: null
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 1,
+            "nombre": "Campaña de Navidad",
+            "descripcion": "Ofertas navideñas",
+            "almacenes": []
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Campaña no encontrada"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/campanias/{id}'
+    metadata:
+      custom: []
+      groupName: 'Campañas ADM'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Eliminar una campaña
+
+        Elimina una campaña junto con sus cupones y relaciones.
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'ID de la campaña.'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 3
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Campaña, cupones y almacenes asociados eliminados correctamente"
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "Campaña no encontrada"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/campanias/tipo-cliente/{id_tipo_cliente}'
+    metadata:
+      custom: []
+      groupName: 'Campañas ADM'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Listar campañas por tipo de cliente
+
+        Obtiene todas las campañas activas asociadas a un tipo de cliente.
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id_tipo_cliente:
+        custom: []
+        name: id_tipo_cliente
+        description: 'ID del tipo de cliente.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id_tipo_cliente: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: array<Campania>
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "No se encontraron campañas para este tipo de cliente"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/campanias/{campania}/almacenes'
+    metadata:
+      custom: []
+      groupName: 'Campañas ADM'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Asociar almacenes a una campaña'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      campania:
+        custom: []
+        name: campania
+        description: 'The campania.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      campaniaId:
+        custom: []
+        name: campaniaId
+        description: 'ID de la campaña.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      campania: consequatur
+      campaniaId: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      almacenes:
+        custom: []
+        name: almacenes
+        description: 'IDs de almacenes.'
+        required: true
+        example:
+          - 2
+          - 3
+        type: 'string[]'
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      almacenes:
+        - 2
+        - 3
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Almacenes asociados correctamente a la campaña"
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/campanias/almacenes/{id}/campanias'
+    metadata:
+      custom: []
+      groupName: 'Campañas ADM'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Obtener campañas por almacén
+
+        Muestra todas las campañas asociadas a un almacén.
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the almacene.'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      almacenId:
+        custom: []
+        name: almacenId
+        description: 'ID del almacén.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: consequatur
+      almacenId: 5
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "campanias": []
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

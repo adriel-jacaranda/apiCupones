@@ -1,0 +1,369 @@
+name: 'Z Flujo de Redimición de Clientes'
+description: 'Guarda un nuevo registro de cupón redimido por un usuario.'
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/comercio/{id}/campanias'
+    metadata:
+      custom: []
+      groupName: 'Z Flujo de Redimición de Clientes'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: |-
+        Obtener campañas de un almacén
+
+        Retorna el almacén junto con sus campañas y cupones asociados.
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'ID del almacén.'
+        required: true
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 5
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "id": 5,
+            "nombre": "Tienda NamNam",
+            "categoria": {"id": 1, "nombre": "Comida"},
+            "campanias": [
+               {
+                  "id": 10,
+                  "titulo": "Promo Halloween",
+                  "cupones": [
+                     {"id": 1, "codigo": "HALLO50", "descuento": "50%"}
+                  ]
+               }
+            ]
+          }
+        headers: []
+        description: Éxito
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/cupones-redimidos/user/{userId}'
+    metadata:
+      custom: []
+      groupName: 'Z Flujo de Redimición de Clientes'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Obtener cupones redimidos por usuario'
+      description: 'Devuelve todos los cupones redimidos asociados a un usuario específico.'
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      userId:
+        custom: []
+        name: userId
+        description: 'El identificador del usuario (por ejemplo, "fb_19823").'
+        required: true
+        example: consequatur
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      userId: consequatur
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: |-
+          {
+            "message": "Cupones redimidos encontrados.",
+            "data": [
+              {
+                "id": 1,
+                "couponId": 10,
+                "comercioId": 3,
+                "created_at": "2025-10-25T18:22:14.000000Z"
+              }
+            ]
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 404
+        content: |-
+          {
+            "message": "No se encontraron cupones redimidos para este usuario.",
+            "data": []
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/cupones-redimidos
+    metadata:
+      custom: []
+      groupName: 'Z Flujo de Redimición de Clientes'
+      groupDescription: 'Guarda un nuevo registro de cupón redimido por un usuario.'
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Registrar un nuevo cupón redimido'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      id_usuario:
+        custom: []
+        name: id_usuario
+        description: 'nullable ID del usuario autenticado (si aplica).'
+        required: false
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      userId:
+        custom: []
+        name: userId
+        description: 'nullable ID del usuario externo (por ejemplo, Firebase).'
+        required: false
+        example: fb_19823
+        type: string
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      couponId:
+        custom: []
+        name: couponId
+        description: 'ID del cupón que se está redimiendo.'
+        required: true
+        example: 10
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      comercioId:
+        custom: []
+        name: comercioId
+        description: 'nullable ID del comercio asociado al cupón.'
+        required: false
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      id_usuario: 5
+      userId: fb_19823
+      couponId: 10
+      comercioId: 3
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "message": "Cupón redimido registrado con éxito.",
+            "data": {
+              "id": 1,
+              "couponId": 10,
+              "userId": "fb_19823",
+              "created_at": "2025-10-25T18:22:14.000000Z"
+            }
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 409
+        content: |-
+          {
+            "message": "Este cupón ya fue redimido por este usuario."
+          }
+        headers: []
+        description: ''
+      -
+        custom: []
+        status: 422
+        content: |-
+          {
+            "message": "Error de validación.",
+            "errors": {
+              "couponId": ["El campo couponId es obligatorio."]
+            }
+          }
+        headers: []
+        description: ''
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/asignaciones
+    metadata:
+      custom: []
+      groupName: 'Z Flujo de Redimición de Clientes'
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Crear una nueva asignación (canje de cupón)'
+      description: |-
+        Crea una relación entre un usuario y un cupón.
+        Si el cupón ya fue canjeado por el mismo usuario, se devolverá un error 409.
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      cupon_id:
+        custom: []
+        name: cupon_id
+        description: 'ID del cupón a asignar.'
+        required: true
+        example: 12
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      user_id:
+        custom: []
+        name: user_id
+        description: 'optional ID del usuario (si está autenticado).'
+        required: false
+        example: 5
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      userId:
+        custom: []
+        name: userId
+        description: 'optional ID alternativo del usuario (desde app externa).'
+        required: false
+        example: 101
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      comercio_id:
+        custom: []
+        name: comercio_id
+        description: 'optional ID del comercio donde se canjeó.'
+        required: false
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+      fecha_canje:
+        custom: []
+        name: fecha_canje
+        description: 'optional Fecha del canje.'
+        required: false
+        example: '2025-10-29'
+        type: date
+        enumValues: []
+        exampleWasSpecified: true
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      cupon_id: 12
+      user_id: 5
+      userId: 101
+      comercio_id: 3
+      fecha_canje: '2025-10-29'
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 201
+        content: |-
+          {
+            "message": "Cupón asignado correctamente.",
+            "data": {"id": 1, "cupon_id": 12, "user_id": 5, "fecha_canje": "2025-10-29"}
+          }
+        headers: []
+        description: Éxito
+      -
+        custom: []
+        status: 409
+        content: '{"message": "El usuario ya canjeó este cupón."}'
+        headers: []
+        description: Duplicado
+      -
+        custom: []
+        status: 422
+        content: '{"message": "Debe proporcionar al menos user_id o userId."}'
+        headers: []
+        description: Validación
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
